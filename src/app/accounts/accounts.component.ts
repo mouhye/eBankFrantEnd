@@ -17,13 +17,13 @@ import {TransferRequest} from "../model/TransferRequest.model";
 export class AccountsComponent implements OnInit{
 account!:SavingAccount|CurrentAccount;
 accountForm!:FormGroup;
-errorMessage: any;
 savingAccount!:SavingAccount;
 currentAccount!:CurrentAccount;
 debitForm!:FormGroup;
 creditForm!:FormGroup;
 transferForm!:FormGroup
 accountOperation!:Operation;
+protected readonly AccountType = AccountType;
 
   constructor(private service:AccountService,private fb:FormBuilder) {
   }
@@ -61,45 +61,37 @@ accountOperation!:Operation;
     })
   }
 
-    debit() {
-        let req = new DebitRequest()
-        req.mountDebit=this.debitForm.value.mountDebit
-        req.description=this.debitForm.value.debitDescription
-        req.accountId=this.account.id
-        this.service.debit(req).subscribe(value => {
-            this.accountOperation=value;
-        },error => {
-            this.errorMessage=error
-        })
+  debit() {
+    let req = new DebitRequest()
+    req.mountDebit=this.debitForm.value.mountDebit
+    req.description=this.debitForm.value.debitDescription
+    req.accountId=this.account.id
+    this.service.debit(req).subscribe(value => {
+      this.accountOperation=value;
+    })
 
-    }
+  }
 
-    credit() {
-      let req=new CreditRequest()
-        req.accountId=this.account.id
-        req.mountCredit=this.creditForm.value.mountCredit
-        req.description=this.creditForm.value.creditDescription
-        this.service.credit(req).subscribe(value => {
-            this.accountOperation=value;
-        },error => {
-            this.errorMessage=error
-        })
+  credit() {
+    let req=new CreditRequest()
+    req.accountId=this.account.id
+    req.mountCredit=this.creditForm.value.mountCredit
+    req.description=this.creditForm.value.creditDescription
+    this.service.credit(req).subscribe(value => {
+      this.accountOperation=value;
+    })
 
-    }
+  }
 
-    protected readonly AccountType = AccountType;
+  transfer() {
+    let req=new TransferRequest()
+    req.accountIdDestination=this.transferForm.value.idDestination;
+    req.accountIdSource=this.account.id;
+    req.mountTransfer=this.transferForm.value.mountTransfer;
+    req.description=this.transferForm.value.transferDescription;
+    this.service.transfer(req).subscribe(value => {
+      this.accountOperation=value
+    })
 
-    transfer() {
-        let req=new TransferRequest()
-        req.accountIdDestination=this.transferForm.value.idDestination;
-        req.accountIdSource=this.account.id;
-        req.mountTransfer=this.transferForm.value.mountTransfer;
-        req.description=this.transferForm.value.transferDescription;
-        this.service.transfer(req).subscribe(value => {
-            this.accountOperation=value
-        },error => {
-            this.errorMessage=error
-        })
-
-    }
+  }
 }
