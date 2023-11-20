@@ -1,0 +1,231 @@
+<div  class="container mt-2">
+  <div class="card">
+    <div class="card-header h2 text-center">
+      Find account by ID
+    </div>
+    <div class="card-body">
+
+      <form [formGroup]="accountForm" (ngSubmit)="findAccountByID()">
+        <div class="input-group">
+          <label class="input-group-text"><i class="bi bi-key"> ID:</i> </label>
+          <input class="form-control" type="text" formControlName="id"/>
+          <button type="submit" [disabled]="!accountForm.valid" class="btn btn-success"><i class="bi bi-search"> Search</i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card" *ngIf="account.type==AccountType.SAVING_ACCOUNT">
+    <div class="card-header h3 text-center">Saving Account </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Balance</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Currency</th>
+            <th>Customer full name</th>
+            <th>interestRate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{savingAccount.balance| number:'1.1-3'}}</td>
+            <td>{{savingAccount.status}}</td>
+            <td>{{savingAccount.createdAt|date:'dd MMM yyyy'}}</td>
+            <td>{{savingAccount.currency}}</td>
+            <td>{{savingAccount.customerDTO.firstName}} {{savingAccount.customerDTO.lastName}}</td>
+            <td>{{savingAccount.interestRate|number:'1.1-3'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <div class="row">
+        <button class="btn btn-primary col-sm m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#DEBIT" aria-controls="offcanvasTop">DEBIT</button>
+        <button class="btn btn-primary col-sm m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#CREDIT" aria-controls="offcanvasTop">CREDIT</button>
+        <button class="btn btn-primary col-sm m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#TRANSFER" aria-controls="offcanvasTop">TRANSFER</button>
+      </div>
+      <div class="offcanvas offcanvas-top" tabindex="-1" id="DEBIT" aria-labelledby="offcanvasTopLabel">
+        <div class="offcanvas-header">
+          <h5 >DEBIT</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="col-3 justify-content-center">
+            <form class="form-control" [formGroup]="debitForm" (ngSubmit)="debit()">
+              <div>
+                <label for="mount">Mount Debit:</label>
+                <input id="mount" type="text" class="form-control" formControlName="mountDebit">
+              </div>
+              <div>
+                <label for="description">Description :</label>
+                <input id="description" type="text" class="form-control" formControlName="debitDescription">
+              </div>
+              <div class="m-2">
+                <button class="btn btn-success form-control"><i class="bi bi-save">Save operation</i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="offcanvas offcanvas-top" tabindex="-1" id="CREDIT" aria-labelledby="offcanvasTopLabel">
+        <div class="offcanvas-header">
+          <h5>CREDIT</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="col-3 justify-content-center">
+            <form class="form-control" [formGroup]="creditForm" (ngSubmit)="credit()">
+              <div>
+                <label for="mountCredit">Mount Credit:</label>
+                <input id="mountCredit" type="text" class="form-control" formControlName="mountCredit">
+              </div>
+              <div>
+                <label for="descriptionC">Description :</label>
+                <input id="descriptionC" type="text" class="form-control" formControlName="creditDescription">
+              </div>
+              <div class="m-2">
+                <button class="btn btn-success form-control"><i class="bi bi-save">Save operation</i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="offcanvas offcanvas-top" tabindex="-1" id="TRANSFER" aria-labelledby="offcanvasTopLabel">
+        <div class="offcanvas-header">
+          <h5>TRANSFER</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="col-3 justify-content-center">
+            <form class="form-control" [formGroup]="transferForm" (ngSubmit)="transfer()">
+              <div>
+                <label for="idDestination">ID Account destination:</label>
+                <input id="idDestination" type="text" class="form-control" formControlName="idDestination">
+              </div>
+              <div>
+                <label for="mountTransfer">Mount transfer:</label>
+                <input id="mountTransfer" type="text" class="form-control" formControlName="mountTransfer">
+              </div>
+              <div>
+                <label for="descriptionT">Description :</label>
+                <input id="descriptionT" type="text" class="form-control" formControlName="transferDescription">
+              </div>
+              <div class="m-2">
+                <button class="btn btn-success form-control"><i class="bi bi-save">Save operation</i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" *ngIf="account.type==AccountType.CURRENT_ACCOUNT">
+    <div class="card-header h3 text-center">Current Account </div>
+     <div class="card-body">
+       <table class="table">
+          <thead>
+            <tr>
+              <th>Balance</th>
+              <th>Status</th>
+              <th>Created At</th>
+              <th>Currency</th>
+              <th>Customer full name</th>
+              <th>overDraft</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{currentAccount.balance| number:'1.1-3'}}</td>
+              <td>{{currentAccount.status}}</td>
+              <td>{{currentAccount.createdAt|date:'dd MMM yyyy'}}</td>
+              <td>{{currentAccount.currency}}</td>
+              <td>{{currentAccount.customerDTO.firstName}} {{currentAccount.customerDTO.lastName}}</td>
+              <td>{{currentAccount.overDraft| number:'1.1-3'}}</td>
+            </tr>
+          </tbody>
+       </table>
+     </div>
+    <div class="card-footer">
+      <div class="row">
+        <button class="btn btn-primary col-sm m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#DEBITC" aria-controls="offcanvasTop">DEBIT</button>
+        <button class="btn btn-primary col-sm m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#CREDITC" aria-controls="offcanvasTop">CREDIT</button>
+        <button class="btn btn-primary col-sm m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#TRANSFERC" aria-controls="offcanvasTop">TRANSFER</button>
+      </div>
+      <div class="offcanvas offcanvas-top" tabindex="-1" id="DEBITC" aria-labelledby="offcanvasTopLabel">
+        <div class="offcanvas-header">
+          <h5 >DEBIT</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="col-3 justify-content-center">
+            <form class="form-control" [formGroup]="debitForm" (ngSubmit)="debit()">
+              <div>
+                <label for="mountC">Mount Debit:</label>
+                <input id="mountC" type="text" class="form-control" formControlName="mountDebit">
+              </div>
+              <div>
+                <label for="description1">Description :</label>
+                <input id="description1" type="text" class="form-control" formControlName="debitDescription">
+              </div>
+              <div class="m-2">
+                <button class="btn btn-success form-control"><i class="bi bi-save">Save operation</i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="offcanvas offcanvas-top" tabindex="-1" id="CREDITC" aria-labelledby="offcanvasTopLabel">
+        <div class="offcanvas-header">
+          <h5>CREDIT</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="col-3 justify-content-center">
+            <form class="form-control" [formGroup]="creditForm" (ngSubmit)="credit()">
+              <div>
+                <label for="mountCreditC">Mount Credit:</label>
+                <input id="mountCreditC" type="text" class="form-control" formControlName="mountCredit">
+              </div>
+              <div>
+                <label for="description2">Description :</label>
+                <input id="description2" type="text" class="form-control" formControlName="creditDescription">
+              </div>
+              <div class="m-2">
+                <button class="btn btn-success form-control"><i class="bi bi-save">Save operation</i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="offcanvas offcanvas-top" tabindex="-1" id="TRANSFERC" aria-labelledby="offcanvasTopLabel">
+        <div class="offcanvas-header">
+          <h5>TRANSFER</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="col-3 justify-content-center">
+            <form class="form-control" [formGroup]="transferForm" (ngSubmit)="transfer()">
+              <div>
+                <label for="idDestination1">ID Account destination:</label>
+                <input id="idDestination1" type="text" class="form-control" formControlName="idDestination">
+              </div>
+              <div>
+                <label for="mountTransfer1">Mount transfer:</label>
+                <input id="mountTransfer1" type="text" class="form-control" formControlName="mountTransfer">
+              </div>
+              <div>
+                <label for="descriptionT1">Description :</label>
+                <input id="descriptionT1" type="text" class="form-control" formControlName="transferDescription">
+              </div>
+              <div class="m-2">
+                <button class="btn btn-success form-control"><i class="bi bi-save">Save operation</i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+</div>
