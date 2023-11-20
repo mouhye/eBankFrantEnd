@@ -37,4 +37,12 @@ export class AccountService {
   transfer(req: TransferRequest):Observable<Operation> {
     return this.http.post<Operation>(environment.backendHost+"/accounts/transfer",req);
   }
+
+  newSavingAccount(sa: SavingAccount, id: number):Observable<SavingAccount> {
+    return this.http.post<SavingAccount>(environment.backendHost+"/savingAccount/"+id,sa)
+  }
+
+  newCurrentAccount(ca: CurrentAccount, id: number):Observable<CurrentAccount> {
+    return this.http.post<CurrentAccount>(environment.backendHost+"/currentAccount/"+id,ca)
+  }
 }
