@@ -69,7 +69,6 @@ protected readonly AccountType = AccountType;
     this.service.debit(req).subscribe(value => {
       this.accountOperation=value;
     })
-
   }
 
   credit() {
@@ -80,7 +79,6 @@ protected readonly AccountType = AccountType;
     this.service.credit(req).subscribe(value => {
       this.accountOperation=value;
     })
-
   }
 
   transfer() {
@@ -92,6 +90,5 @@ protected readonly AccountType = AccountType;
     this.service.transfer(req).subscribe(value => {
       this.accountOperation=value
     })
-
   }
 }
